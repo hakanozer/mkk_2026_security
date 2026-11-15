@@ -1,6 +1,8 @@
+// SecurityConfig.java
 package com.works.config;
 
 import com.works.service.CustomerService;
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +12,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.session.DisableEncodeUrlFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -17,17 +23,23 @@ public class SecurityConfig {
 
     private final CustomerService customerService;
     private final PasswordEncoder passwordEncoder;
+    private final RateLimiterRegistry rateLimiterRegistry;
 
-    // Security configuration can be added here
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .httpBasic(Customizer.withDefaults())
-                .authorizeHttpRequests(req ->
-                        req
+                .authorizeHttpRequests(req -> req
                         .requestMatchers("/product/**").hasRole("product")
                         .requestMatchers("/note/**").hasRole("note")
                         .requestMatchers("/customer/**").permitAll()
+                        .anyRequest().permitAll()
+                )
+                .addFilterBefore(new LogFilter(), DisableEncodeUrlFilter.class)   // zincirin en başı
+                .addFilterAfter(new AuthCaptureFilter(), AnonymousAuthenticationFilter.class)
+                .addFilterAfter(
+                        new RateLimitFilter(rateLimiterRegistry),
+                        UsernamePasswordAuthenticationFilter.class
                 )
                 .formLogin(login -> login.disable())
                 .csrf(csrf -> csrf.disable())
@@ -36,14 +48,9 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(customerService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
-        return daoAuthenticationProvider;
+        DaoAuthenticationProvider provider =
+                new DaoAuthenticationProvider(customerService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
     }
-
 }
-/*
-ali@mail.com -> product
-veli@mail.com -> note
-zehra@mail.com -> product, note
- */
