@@ -66,6 +66,7 @@ public class CustomerService implements UserDetailsService {
 
     // select * from customer where email = 'adfghdfg@mail.com' and password = '' or 1 = 1 -- '
     public boolean login(CustomerLoginRequestDto req) {
+
         /*
         try {
             String sql = "select * from customer where email = '"+req.getEmail()+"' and password = '"+req.getPassword()+"'";

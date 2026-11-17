@@ -1,11 +1,15 @@
 package com.works.controller;
 
+import com.works.customValid.CityValid;
 import com.works.dto.CustomerLoginRequestDto;
 import com.works.dto.CustomerRegisterRequestDto;
 import com.works.entity.Customer;
 import com.works.service.CustomerService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +33,10 @@ public class CustomerController {
     public boolean login(@RequestBody CustomerLoginRequestDto customerLoginRequestDto) {
         return customerService.login(customerLoginRequestDto);
     }
+
+    // email = ''
+    // password = "' or 1 = 1 --"
+    // select * from customer where email = 'a@a.com' and password = '' or 1 = 1 --'
 
 
 }
