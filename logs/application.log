@@ -2247,3 +2247,24 @@
                 Logger    : com.works.config.LogFilter
                 Message   : HTTP REQUEST | User: zehra@mail.com | Method: POST | URI: /note/save | Status: 200 | Duration: 1675 ms | IP: 0:0:0:0:0:0:0:1 | SessionID: No Session | Roles: ROLE_note, ROLE_product, FACTOR_PASSWORD | Agent: PostmanRuntime/2.16.2
                 
+================================================================
+                Date      : 2026-11-17 16:01:02.590
+                Level     : INFO 
+                Thread    : [SpringContextShutdownHook]
+                Logger    : org.springframework.boot.tomcat.GracefulShutdown
+                Message   : Commencing graceful shutdown. Waiting for active requests to complete
+                
+================================================================
+                Date      : 2026-11-17 16:01:02.594
+                Level     : INFO 
+                Thread    : [tomcat-shutdown]
+                Logger    : org.springframework.boot.tomcat.GracefulShutdown
+                Message   : Graceful shutdown complete
+                
+================================================================
+                Date      : 2026-11-17 16:01:02.598
+                Level     : INFO 
+                Thread    : [SpringContextShutdownHook]
+                Logger    : o.s.orm.jpa.LocalContainerEntityManagerFactoryBean
+                Message   : Closing JPA EntityManagerFactory for persistence unit 'default'
+                

@@ -24,6 +24,8 @@ public class LogFilter extends OncePerRequestFilter {
         long start = System.currentTimeMillis();
         Throwable error = null;
 
+        request.changeSessionId(); // session fixation önlemek için session id değiştiriyoruz
+
         try {
             XssRequestWrapper xssReq = new XssRequestWrapper(request);
             filterChain.doFilter(xssReq, response);
